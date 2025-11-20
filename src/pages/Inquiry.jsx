@@ -205,6 +205,17 @@ const Inquiry = () => {
   };
 
   const handleEditPost = () => {
+    // Populate form with current post data
+    setFormData({
+      title: currentPost.title,
+      author: currentPost.author,
+      contact: currentPost.contact,
+      content: currentPost.content,
+      password: '',
+    });
+    // Close post detail view and show edit form
+    setCurrentPost(null);
+    setShowCreateForm(true);
     navigate(`/inquiry?id=${selectedPostId}&action=edit`);
   };
 
