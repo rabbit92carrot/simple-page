@@ -145,11 +145,35 @@ The app works out-of-the-box without any environment variables (uses localStorag
 #### Required for Production:
 - `VITE_ADMIN_PASSWORD`: Admin password for inquiry board (default: `admin123`)
 
-#### Optional (for real database):
+#### Optional (for persistent database):
 - `VITE_SUPABASE_URL`: Your Supabase project URL
 - `VITE_SUPABASE_ANON_KEY`: Your Supabase anonymous key
 
 **Important:** Never commit `.env` file to Git. Use your hosting platform's environment variable settings.
+
+### Supabase Database Setup (Optional)
+
+By default, the inquiry board uses localStorage (data is browser-specific and not persistent across deployments). To use a real database:
+
+1. **Create a Supabase Project**:
+   - Go to [supabase.com](https://supabase.com) and create a new project
+   - Wait for the database to be provisioned
+
+2. **Run the Database Schema**:
+   - In Supabase Dashboard → SQL Editor
+   - Copy contents of `supabase-schema.sql`
+   - Run the SQL to create the `inquiry_posts` table
+
+3. **Get Your Credentials**:
+   - Project Settings → API
+   - Copy `Project URL` (VITE_SUPABASE_URL)
+   - Copy `anon public` key (VITE_SUPABASE_ANON_KEY)
+
+4. **Set Environment Variables**:
+   - Add the credentials to your hosting platform (Vercel/Netlify)
+   - Redeploy the application
+
+After setup, all inquiry posts will be stored in Supabase and persist across deployments.
 
 ### Deploy to Netlify
 

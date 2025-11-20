@@ -86,5 +86,70 @@ class MockStorage {
   }
 }
 
-// Export mock storage for development
-export const inquiryStorage = new MockStorage();
+// Supabase Storage Implementation
+class SupabaseStorage {
+  constructor(client) {
+    this.client = client;
+    this.tableName = 'inquiry_posts';
+  }
+
+  async createPost(post) {
+    const { data, error } = await this.client
+      .from(this.tableName)
+      .insert([post])
+      .select()
+      .single();
+
+    return { data, error };
+  }
+
+  async getPost(id) {
+    const { data, error } = await this.client
+      .from(this.tableName)
+      .select('*')
+      .eq('id', id)
+      .single();
+
+    return { data, error };
+  }
+
+  async updatePost(id, updates) {
+    const { data, error } = await this.client
+      .from(this.tableName)
+      .update({
+        ...updates,
+        updated_at: new Date().toISOString(),
+      })
+      .eq('id', id)
+      .select()
+      .single();
+
+    return { data, error };
+  }
+
+  async deletePost(id) {
+    const { data, error} = await this.client
+      .from(this.tableName)
+      .delete()
+      .eq('id', id)
+      .select()
+      .single();
+
+    return { data, error };
+  }
+
+  async listPosts() {
+    const { data, error } = await this.client
+      .from(this.tableName)
+      .select('id, title, author, created_at')
+      .order('created_at', { ascending: false });
+
+    return { data, error };
+  }
+}
+
+// Export appropriate storage based on configuration
+// Use Supabase if credentials are provided, otherwise use localStorage
+export const inquiryStorage = supabase
+  ? new SupabaseStorage(supabase)
+  : new MockStorage();
