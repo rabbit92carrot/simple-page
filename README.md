@@ -121,6 +121,13 @@ This will:
 - Business hours
 - Location details
 
+### Inquiry Board
+- Password-protected inquiry system
+- Create, read, update, delete posts
+- Role-based access (author and admin)
+- Contact info privacy protection
+- SEO protection for post content
+
 ## Deployment
 
 ### Build for Production
@@ -131,18 +138,86 @@ npm run build
 
 The optimized production build will be in the `dist/` directory.
 
-### Deploy to Static Hosting
+### Environment Variables for Deployment
 
-The built application can be deployed to any static hosting service:
+The app works out-of-the-box without any environment variables (uses localStorage for inquiry board). However, for production deployments, you should configure:
 
-- **Netlify**: Drop `dist/` folder or connect GitHub repository
-- **Vercel**: Import GitHub repository
-- **GitHub Pages**: Push `dist/` to `gh-pages` branch
-- **AWS S3**: Upload `dist/` contents to S3 bucket
+#### Required for Production:
+- `VITE_ADMIN_PASSWORD`: Admin password for inquiry board (default: `admin123`)
 
-## Environment Variables
+#### Optional (for real database):
+- `VITE_SUPABASE_URL`: Your Supabase project URL
+- `VITE_SUPABASE_ANON_KEY`: Your Supabase anonymous key
 
-No environment variables required for basic operation.
+**Important:** Never commit `.env` file to Git. Use your hosting platform's environment variable settings.
+
+### Deploy to Netlify
+
+1. Push your code to GitHub
+2. Go to [Netlify](https://netlify.com) and create a new site from Git
+3. Connect your GitHub repository
+4. Build settings:
+   - Build command: `npm run build`
+   - Publish directory: `dist`
+5. Environment variables (Site settings → Environment variables):
+   ```
+   VITE_ADMIN_PASSWORD=your-secure-password
+   ```
+6. Deploy!
+
+### Deploy to Vercel
+
+1. Push your code to GitHub
+2. Go to [Vercel](https://vercel.com) and import your repository
+3. Build settings (auto-detected):
+   - Framework Preset: Vite
+   - Build Command: `npm run build`
+   - Output Directory: `dist`
+4. Environment Variables:
+   ```
+   VITE_ADMIN_PASSWORD=your-secure-password
+   ```
+5. Deploy!
+
+### Deploy to GitHub Pages
+
+**Note:** GitHub Pages doesn't support environment variables. The app will work with localStorage mode and default admin password (`admin123`).
+
+1. Install gh-pages:
+   ```bash
+   npm install --save-dev gh-pages
+   ```
+
+2. Add to `package.json`:
+   ```json
+   {
+     "homepage": "https://yourusername.github.io/simple-page",
+     "scripts": {
+       "predeploy": "npm run build",
+       "deploy": "gh-pages -d dist"
+     }
+   }
+   ```
+
+3. Update `vite.config.js`:
+   ```javascript
+   export default defineConfig({
+     base: '/simple-page/',
+     plugins: [react()],
+   })
+   ```
+
+4. Deploy:
+   ```bash
+   npm run deploy
+   ```
+
+### Security Notes
+
+- **Never commit `.env` file** - It's already in `.gitignore`
+- **Change admin password** in production from default `admin123`
+- **Supabase credentials** are safe to use in frontend (anon key has limited permissions)
+- **Admin password** should be kept secret - only share with administrators
 
 ## Browser Support
 
