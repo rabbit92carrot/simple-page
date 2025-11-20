@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /inquiry?id=*
+
+# Prevent crawling of inquiry post content
+# List view is allowed, but individual posts are protected
