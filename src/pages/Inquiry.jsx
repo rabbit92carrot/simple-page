@@ -73,7 +73,8 @@ const Inquiry = () => {
     });
 
     if (error) {
-      alert('Failed to create post');
+      console.error('Error creating post:', error);
+      alert(`Failed to create post: ${error.message || 'Unknown error'}`);
       return;
     }
 
